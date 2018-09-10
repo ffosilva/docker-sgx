@@ -1,6 +1,8 @@
-[![Docker Build Status](https://img.shields.io/docker/build/sebvaucher/sgx-base.svg)](https://hub.docker.com/r/sebvaucher/sgx-base/)
+[![Docker Build Status](https://img.shields.io/docker/build/ffosilva/sgx.svg)](https://hub.docker.com/r/ffosilva/sgx/)
 
 # Dockerization of SGX container built using Intel SDK
+
+## based on [sebva/docker-sgx](https://github.com/sebva/docker-sgx)
 
 Instructions:
 * Create a new image with this one as a base, or mount your source code as a volume at `/usr/src/app`
@@ -13,6 +15,7 @@ Instructions:
 * sgx_2.1
 * sgx_2.1.1
 * sgx_2.1.2
+* sgx_2.2
 
 ## Example Dockerfile
 
@@ -21,7 +24,7 @@ Example using `SampleEnclave` shipped with the official SDK
 **Dockerfile**
 
 ```Dockerfile
-FROM sebvaucher/sgx-base:sgx_2.1.2
+FROM ffosilva/sgx:sgx_2.2
 
 COPY . ./
 RUN make SGX_DEBUG=0 SGX_PRERELEASE=1 SGX_MODE=HW
