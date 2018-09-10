@@ -2,8 +2,6 @@
 
 # Dockerization of SGX container built using Intel SDK
 
-## based on [sebva/docker-sgx](https://github.com/sebva/docker-sgx)
-
 Instructions:
 * Create a new image with this one as a base, or mount your source code as a volume at `/usr/src/app`
 * The driver must be loaded in the host, but `aesmd` and `jhid` must be stopped
