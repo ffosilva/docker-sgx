@@ -1,0 +1,8 @@
+FROM ffosilva/sgx:sgx_2.8
+
+# COPY . ./
+RUN cp -rf /opt/intel/sgxsdk/SampleCode/SampleEnclave/* .
+
+RUN make SGX_DEBUG=0 SGX_PRERELEASE=1 SGX_MODE=HW
+
+CMD ["./app"]
