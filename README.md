@@ -19,6 +19,7 @@ Instructions:
 * sgx_2.5
 * sgx_2.8
 * sgx_2.9
+* sgx_2.9.1
 
 ## Example Dockerfile
 
@@ -27,7 +28,7 @@ Example using `SampleEnclave` shipped with the official SDK
 **Dockerfile**
 
 ```Dockerfile
-FROM ffosilva/sgx:sgx_2.9
+FROM ffosilva/sgx:sgx_2.9.1
 
 COPY . ./
 RUN make SGX_DEBUG=0 SGX_PRERELEASE=1 SGX_MODE=HW

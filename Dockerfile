@@ -24,7 +24,7 @@ RUN apt-get update \
 
 COPY install-psw.patch ./
 
-ARG SGX_TAG="sgx_2.9"
+ARG SGX_TAG="sgx_2.9.1"
 
 RUN git clone https://github.com/intel/linux-sgx.git --recursive -b ${SGX_TAG} linux-sgx \
     && cd linux-sgx \
@@ -35,9 +35,9 @@ RUN git clone https://github.com/intel/linux-sgx.git --recursive -b ${SGX_TAG} l
           external/toolset/ld.gold \
           external/toolset/objdump /usr/local/bin \
     && make sdk_install_pkg -j$(nproc) \
-    && ./linux/installer/bin/sgx_linux_x64_sdk_2.9.100.2.bin --prefix=/opt/intel \
+    && ./linux/installer/bin/sgx_linux_x64_sdk_2.9.101.2.bin --prefix=/opt/intel \
     && make psw_install_pkg -j$(nproc) \
-    && ./linux/installer/bin/sgx_linux_x64_psw_2.9.100.2.bin \
+    && ./linux/installer/bin/sgx_linux_x64_psw_2.9.101.2.bin \
     && cd .. \
     && rm -rf linux-sgx
 
@@ -45,6 +45,3 @@ WORKDIR /usr/src/app
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-
-# For debug purposes
-# COPY jhi.conf /etc/jhi/jhi.conf
