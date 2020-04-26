@@ -1,4 +1,4 @@
-FROM ffosilva/sgx:sgx_2.8
+FROM ffosilva/sgx:sgx_2.9
 
 # COPY . ./
 RUN cp -rf /opt/intel/sgxsdk/SampleCode/SampleEnclave/* .
