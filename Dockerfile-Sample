@@ -1,4 +1,4 @@
-FROM ffosilva/sgx:sgx_2.10
+FROM ffosilva/sgx:sgx_2.11
 
 # Install dependencies
 RUN apt-get update && \
