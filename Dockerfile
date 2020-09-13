@@ -1,45 +1,55 @@
-FROM ubuntu:bionic
-
-WORKDIR /usr/src
+FROM ubuntu:18.04 as builder
 
 RUN apt-get update \
     && apt-get install -yq --no-install-recommends \
-    build-essential \
-    ocaml \
-    ocamlbuild \
-    automake \
     autoconf \
-    libtool \
-    wget \
-    python \
-    libssl-dev \
+    automake \
+    build-essential \
+    ca-certificates \
+    cmake \
+    curl \
+    debhelper \
     git \
     libcurl4-openssl-dev \
-    protobuf-compiler \
     libprotobuf-dev \
-    debhelper \
-    cmake \
-    reprepro \
-    ca-certificates
+    libssl-dev \
+    libtool \
+    lsb-release \
+    ocaml \
+    ocamlbuild \
+    protobuf-compiler \
+    python \
+    wget
 
-COPY install-psw.patch ./
+WORKDIR /usr/src/linux-sgx
 
-ARG SGX_TAG="sgx_2.9.1"
+ARG SGX_TAG="sgx_2.10"
 
-RUN git clone https://github.com/intel/linux-sgx.git --recursive -b ${SGX_TAG} linux-sgx \
-    && cd linux-sgx \
-    && patch -p1 -i ../install-psw.patch \
-    && ./download_prebuilt.sh \
-    && cp external/toolset/as \
-          external/toolset/ld \
-          external/toolset/ld.gold \
-          external/toolset/objdump /usr/local/bin \
-    && make sdk_install_pkg -j$(nproc) \
-    && ./linux/installer/bin/sgx_linux_x64_sdk_2.9.101.2.bin --prefix=/opt/intel \
-    && make psw_install_pkg -j$(nproc) \
-    && ./linux/installer/bin/sgx_linux_x64_psw_2.9.101.2.bin \
-    && cd .. \
-    && rm -rf linux-sgx
+RUN git clone https://github.com/intel/linux-sgx.git --depth 1 --recursive -b ${SGX_TAG} . \
+    && ./download_prebuilt.sh
+
+ADD patches /tmp/patches/
+
+RUN cat /tmp/patches/* | patch -p1 \
+    && make sdk_install_pkg_no_mitigation -j$(nproc) \
+    && ./linux/installer/bin/sgx_linux_x64_sdk_2.10.100.2.bin --prefix=/opt/intel \
+    && make psw_install_pkg -j$(nproc)
+
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get install -y \
+    libcurl4 \
+    libprotobuf10 \
+    libssl1.1 \
+    make \
+    module-init-tools
+
+COPY --from=builder /usr/src/linux-sgx/linux/installer/bin/sgx_linux_x64_sdk_2.10.100.2.bin \
+                    /usr/src/linux-sgx/linux/installer/bin/sgx_linux_x64_psw_2.10.100.2.bin /tmp/
+
+RUN /tmp/sgx_linux_x64_sdk_2.10.100.2.bin --prefix=/opt/intel && \
+    /tmp/sgx_linux_x64_psw_2.10.100.2.bin && \
+    rm -rf /tmp/sgx_linux_x64_sdk_2.10.100.2.bin /tmp/sgx_linux_x64_psw_2.10.100.2.bin
 
 WORKDIR /usr/src/app
 

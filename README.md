@@ -20,6 +20,7 @@ Instructions:
 * sgx_2.8
 * sgx_2.9
 * sgx_2.9.1
+* sgx_2.10
 
 ## Example Dockerfile
 
@@ -28,12 +29,19 @@ Example using `SampleEnclave` shipped with the official SDK
 **Dockerfile**
 
 ```Dockerfile
-FROM ffosilva/sgx:sgx_2.9.1
+FROM ffosilva/sgx:sgx_2.10
 
-COPY . ./
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y g++
+
+# COPY . ./
+RUN cp -rf /opt/intel/sgxsdk/SampleCode/SampleEnclave/* .
+
 RUN make SGX_DEBUG=0 SGX_PRERELEASE=1 SGX_MODE=HW
 
 CMD ["./app"]
+
 ```
 
 **Building image**
@@ -44,14 +52,14 @@ $ docker build -t sampleenclave .
 
 **Running in container**
 
-If your system uses the MEI kernel module (/dev/mei0 is available), you should run the application using the following command:
+If your system uses Out-Of-Tree SGX driver (/dev/isgx is available), you should run the application using the following command:
 
 ```shell
-$ docker run --device /dev/isgx --device /dev/mei0 sampleenclave
+$ docker run --device /dev/isgx sampleenclave
 ```
 
-If your system uses the DAL kernel module (/dev/dal0 is available), you should run the application using the following command:
+If your system uses the In-Kernel SGX driver (/dev/sgx is available), you should run the application using the following command:
 
 ```shell
-$ docker run --device /dev/isgx --device /dev/dal0 sampleenclave
+$ docker run --device /dev/sgx sampleenclave
 ```

@@ -1,4 +1,8 @@
-FROM ffosilva/sgx:sgx_2.9.1
+FROM ffosilva/sgx:sgx_2.10
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y g++
 
 # COPY . ./
 RUN cp -rf /opt/intel/sgxsdk/SampleCode/SampleEnclave/* .

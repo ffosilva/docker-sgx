@@ -1,8 +1,17 @@
+From c6bd32a3881929e9a1cfb0c9fa2d3d911e957b49 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?F=C3=A1bio=20Silva?= <fabio.fernando.osilva@gmail.com>
+Date: Sun, 13 Sep 2020 18:25:56 -0300
+Subject: [PATCH] Add support for installation on container
+
+---
+ linux/installer/common/psw/install.sh | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
 diff --git a/linux/installer/common/psw/install.sh b/linux/installer/common/psw/install.sh
-index 340d885d..49d0fd2f 100755
+index 042f83c..2826cbc 100755
 --- a/linux/installer/common/psw/install.sh
 +++ b/linux/installer/common/psw/install.sh
-@@ -114,7 +114,7 @@ else
+@@ -106,7 +106,7 @@ else
          echo "Warning: No systemctl/initctl to start AESM. You may start AESM manually, e.g., /opt/intel/sgxpsw/aesm/aesm_service --no-daemon"
      else
          echo "Error: Unsupported platform - neither systemctl nor initctl is found."
@@ -11,18 +20,7 @@ index 340d885d..49d0fd2f 100755
      fi
  fi
  
-@@ -152,10 +152,6 @@ cat > $PSW_DST_PATH/uninstall.sh <<EOF
- #
- 
- 
--if test \$(id -u) -ne 0; then
--    echo "Root privilege is required."
--    exit 1
--fi
- 
- # Killing AESM service
- if [ -d /run/systemd/system ]; then
-@@ -238,11 +234,6 @@ cat > $AESM_PATH/linksgx.sh <<EOF
+@@ -160,11 +160,6 @@ cat > $PSW_DST_PATH/uninstall.sh <<EOF
  #
  
  
@@ -31,6 +29,9 @@ index 340d885d..49d0fd2f 100755
 -    exit 1
 -fi
 -
- /usr/sbin/usermod -aG sgx_prv aesmd &> /dev/null
+ $PSW_DST_PATH/cleanup.sh
  
- if [ -e /dev/sgx ]; then
+ # Stop and disable remount-dev-exec service
+-- 
+2.24.3 (Apple Git-128)
+
