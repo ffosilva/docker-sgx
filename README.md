@@ -22,6 +22,7 @@ Instructions:
 * sgx_2.9.1
 * sgx_2.10
 * sgx_2.11
+* sgx_2.12
 
 ## Example Dockerfile
 
@@ -30,7 +31,7 @@ Example using `SampleEnclave` shipped with the official SDK
 **Dockerfile**
 
 ```Dockerfile
-FROM ffosilva/sgx:sgx_2.11
+FROM ffosilva/sgx:sgx_2.12
 
 # Install dependencies
 RUN apt-get update && \
